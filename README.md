@@ -11,14 +11,6 @@ This is the official code for our paper:
 
 ---
 
-## Overview
-
-**GuidedMorph** is an open-source PyTorch implementation of our two-stage deep learning framework for deformable registration of breast MRI. The method leverages both image and anatomical guidance to achieve accurate and robust registration, especially for challenging multi-label and multi-modal breast datasets.
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/d638f384-269b-4a1f-8151-e7b2b92735b7" width="600"/>
-</p>
-
 ## Table of Contents
 
 - [Installation](#installation)
