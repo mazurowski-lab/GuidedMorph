@@ -1,0 +1,13 @@
+{
+  "GPU_iden": 1,
+  "batch_size": 1,
+  "train_dir": "demo/train/",
+  "save_frequency": 2,
+  "lr": 0.0005,
+  "epoch_start": 0,
+  "max_epoch": 15000,
+  "img_size": [128, 256, 256],
+  "cont_training": false,
+  "weights": [1.0, 1.0, 0.08],
+  "architecture": "UNet_Cbam_STN"
+} 

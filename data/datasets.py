@@ -1,28 +1,19 @@
 import os, glob
-import torch, sys
+import torch
 from torch.utils.data import Dataset
 from .data_utils import pkload
-import matplotlib.pyplot as plt
-
 import numpy as np
-
 
 class JHUBrainDataset(Dataset):
     def __init__(self, data_path, transforms):
         self.paths = data_path
         self.transforms = transforms
 
-    def one_hot(self, img, C):
-        out = np.zeros((C, img.shape[1], img.shape[2], img.shape[3]))
-        for i in range(C):
-            out[i,...] = img == i
-        return out
-
     def __getitem__(self, index):
         path = self.paths[index]
         x, y = pkload(path)
         x, y = x[None, ...], y[None, ...]
-        x,y = self.transforms([x, y])
+        x, y = self.transforms([x, y])
         x = np.ascontiguousarray(x)
         y = np.ascontiguousarray(y)
         x, y = torch.from_numpy(x), torch.from_numpy(y)
@@ -31,46 +22,22 @@ class JHUBrainDataset(Dataset):
     def __len__(self):
         return len(self.paths)
 
-
 class JHUBrainInferDataset(Dataset):
     def __init__(self, data_path, transforms):
         self.paths = data_path
         self.transforms = transforms
 
-    def one_hot(self, img, C):
-        out = np.zeros((C, img.shape[1], img.shape[2], img.shape[3]))
-        for i in range(C):
-            out[i,...] = img == i
-        return out
-
     def __getitem__(self, index):
         path = self.paths[index]
         x, y, x_seg, y_seg = pkload(path)
-        #print(x.shape)
-        #print(x.shape)
-        #print(np.unique(y))
-        # print(x.shape, y.shape)#(240, 240, 155) (240, 240, 155)
-        # transforms work with nhwtc
         x, y = x[None, ...], y[None, ...]
-        x_seg, y_seg= x_seg[None, ...], y_seg[None, ...]
-        # print(x.shape, y.shape)#(1, 240, 240, 155) (1, 240, 240, 155)
+        x_seg, y_seg = x_seg[None, ...], y_seg[None, ...]
         x, x_seg = self.transforms([x, x_seg])
         y, y_seg = self.transforms([y, y_seg])
-        #y = self.one_hot(y, 2)
-        #print(y.shape)
-        #sys.exit(0)
-        x = np.ascontiguousarray(x)# [Bsize,channelsHeight,,Width,Depth]
+        x = np.ascontiguousarray(x)
         y = np.ascontiguousarray(y)
-        x_seg = np.ascontiguousarray(x_seg)  # [Bsize,channelsHeight,,Width,Depth]
+        x_seg = np.ascontiguousarray(x_seg)
         y_seg = np.ascontiguousarray(y_seg)
-        #plt.figure()
-        #plt.subplot(1, 2, 1)
-        #plt.imshow(x[0, :, :, 8], cmap='gray')
-        #plt.subplot(1, 2, 2)
-        #plt.imshow(y[0, :, :, 8], cmap='gray')
-        #plt.show()
-        #sys.exit(0)
-        #y = np.squeeze(y, axis=0)
         x, y, x_seg, y_seg = torch.from_numpy(x), torch.from_numpy(y), torch.from_numpy(x_seg), torch.from_numpy(y_seg)
         return x, y, x_seg, y_seg
 
@@ -82,47 +49,29 @@ class JHUBrainInferBreastDataset(Dataset):
         self.paths = data_path
         self.transforms = transforms
 
-    def one_hot(self, img, C):
-        out = np.zeros((C, img.shape[1], img.shape[2], img.shape[3]))
-        for i in range(C):
-            out[i,...] = img == i
-        return out
-
     def __getitem__(self, index):
         path = self.paths[index]
-        x, y, x_breast_seg, y_breast_seg, x_seg, y_seg = pkload(path)
-        #print(x.shape)
-        #print(x.shape)
-        #print(np.unique(y))
-        # print(x.shape, y.shape)#(240, 240, 155) (240, 240, 155)
-        # transforms work with nhwtc
+        loaded = pkload(path)
+        x, y = loaded[0], loaded[1]
+        segs = loaded[2:]
+        # segs: [x_seg1, y_seg1, x_seg2, y_seg2, ...]
+        label_pairs = []
+        for i in range(0, len(segs), 2):
+            x_seg = segs[i][None, ...]
+            y_seg = segs[i+1][None, ...]
+            x_seg, y_seg = self.transforms([x_seg, y_seg])
+            x_seg = np.ascontiguousarray(x_seg)
+            y_seg = np.ascontiguousarray(y_seg)
+            x_seg = torch.from_numpy(x_seg)
+            y_seg = torch.from_numpy(y_seg)
+            label_pairs.append((x_seg, y_seg))
         x, y = x[None, ...], y[None, ...]
-        x_breast_seg, y_breast_seg= x_breast_seg[None, ...], y_breast_seg[None, ...]
-        x_seg, y_seg= x_seg[None, ...], y_seg[None, ...]
-        # print(x.shape, y.shape)#(1, 240, 240, 155) (1, 240, 240, 155)
-        _, x_breast_seg = self.transforms([x, x_breast_seg])
-        _, y_breast_seg = self.transforms([y, y_breast_seg])
-        x, x_seg = self.transforms([x, x_seg])
-        y, y_seg = self.transforms([y, y_seg])
-        #y = self.one_hot(y, 2)
-        #print(y.shape)
-        #sys.exit(0)
-        x = np.ascontiguousarray(x)# [Bsize,channelsHeight,,Width,Depth]
+        x, y = self.transforms([x, y])
+        x = np.ascontiguousarray(x)
         y = np.ascontiguousarray(y)
-        x_breast_seg = np.ascontiguousarray(x_breast_seg)  # [Bsize,channelsHeight,,Width,Depth]
-        y_breast_seg = np.ascontiguousarray(y_breast_seg)
-        x_seg = np.ascontiguousarray(x_seg)  # [Bsize,channelsHeight,,Width,Depth]
-        y_seg = np.ascontiguousarray(y_seg)
-        #plt.figure()
-        #plt.subplot(1, 2, 1)
-        #plt.imshow(x[0, :, :, 8], cmap='gray')
-        #plt.subplot(1, 2, 2)
-        #plt.imshow(y[0, :, :, 8], cmap='gray')
-        #plt.show()
-        #sys.exit(0)
-        #y = np.squeeze(y, axis=0)
-        x, y, x_breast_seg, y_breast_seg, x_seg, y_seg = torch.from_numpy(x), torch.from_numpy(y),  torch.from_numpy(x_breast_seg), torch.from_numpy(y_breast_seg), torch.from_numpy(x_seg), torch.from_numpy(y_seg)
-        return x, y, x_breast_seg, y_breast_seg, x_seg, y_seg
+        x = torch.from_numpy(x)
+        y = torch.from_numpy(y)
+        return x, y, label_pairs
 
     def __len__(self):
         return len(self.paths)

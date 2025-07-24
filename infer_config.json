@@ -1,0 +1,8 @@
+{
+  "test_dir": "demo/test/",
+  "img_size": [128, 256, 256],
+  "weights": [1.0, 1.0, 0.08],
+  "model_idx": -1,
+  "model_type": "VxmDense_2",
+  "model_folder_template": "vxm_2_mse_{0}_diffusion_{1}_{2}_2/"
+} 
