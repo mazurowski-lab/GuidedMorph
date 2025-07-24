@@ -174,12 +174,6 @@ If you use this code or our method in your research, please cite:
 
 ---
 
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
----
-
 ## Contact
 
 For questions or collaborations, please contact [Yaqian Chen](mailto:yaqian.chen@duke.edu) or open an issue on GitHub.
