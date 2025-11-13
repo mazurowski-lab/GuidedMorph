@@ -7,6 +7,12 @@
 Please check the [Google Drive](https://drive.google.com/drive/folders/1OZtwY_XnlwbKCATCZiuiFSLwuUW3XZnM?usp=sharing) for Guided-Trans-DT weights and the ISPY2 external dataset.
 
 
+## To-do
+
+- [ ] update arxiv
+- [ ] add feature extraction gpu version
+
+
 This is the official code for our paper:  
 **GuidedMorph: Two-Stage Deformable Registration for Breast MRI**
 ![Screenshot 2025-06-16 at 3 31 14 PM](https://github.com/user-attachments/assets/d638f384-269b-4a1f-8151-e7b2b92735b7)
