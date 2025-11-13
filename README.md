@@ -4,6 +4,8 @@
 ---
 [![arXiv](https://img.shields.io/badge/arXiv-2502.09779-b31b1b.svg)](https://arxiv.org/abs/2505.13414)
 
+Please check the [Google Drive](https://drive.google.com/drive/folders/1OZtwY_XnlwbKCATCZiuiFSLwuUW3XZnM?usp=sharing) for Guided-Trans-DT weights and the ISPY2 external dataset.
+
 
 This is the official code for our paper:  
 **GuidedMorph: Two-Stage Deformable Registration for Breast MRI**
